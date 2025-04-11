@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إذاعة رتل - القرآن الكريم</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      color: #000;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .header, .footer {
+      background-color: #1c1c3c;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+    }
+
+    .main-banner {
+      background: linear-gradient(#00000099, #00000099), url('background.jpg');
+      background-size: cover;
+      height: 220px;
+      color: #fff;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .banner-title {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .player-container {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .category-buttons {
+      margin-bottom: 20px;
+    }
+
+    .category-btn {
+      display: inline-block;
+      margin: 0 5px;
+      padding: 10px 15px;
+      background-color: #ddd;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .category-btn.active {
+      background-color: #1c1c3c;
+      color: #fff;
+    }
+
+    select, audio {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .mode-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
+    body.dark-mode {
+      background-color: #333;
+      color: #fff;
+    }
+
+    body.dark-mode .header, body.dark-mode .footer {
+      background-color: #222;
+    }
+
+    body.dark-mode .main-banner {
+      background: linear-gradient(#00000099, #00000099), url('background.jpg');
+    }
+  </style>
+</head>
+<body>
+
+  <button class="mode-toggle" onclick="toggleMode()">تبديل الوضع</button>
+
+  <div class="header">
+    <h1>إذاعة رتل</h1>
+  </div>
+
+  <div class="main-banner">
+    <h2 class="banner-title">اختر ما يريح قلبك</h2>
+    <p>أكثر من 160 محطة بث مباشر</p>
+  </div>
+
+  <div class="player-container">
+    <div class="category-buttons">
+      <button class="category-btn active" onclick="showCategory('reciters', this)">قراء</button>
+      <button class="category-btn" onclick="showCategory('azkar', this)">أذكار</button>
+      <button class="category-btn" onclick="showCategory('riwayat', this)">روايات</button>
+    </div>
+
+    <select id="stationSelect" onchange="changeStation()">
+      <!-- ستُملأ ديناميكيًا -->
+    </select>
+
+    <audio id="audioPlayer" controls>
+      <source id="audioSource" src="" type="audio/mpeg">
+      متصفحك لا يدعم مشغل الصوت.
+    </audio>
+  </div>
+
+  <div class="footer">
+    رتل - بإشرافك يا قمر 2025
+  </div>
+
+  <script>
+    const stations = {
+      reciters: [
+        { name: "الشيخ شريم - السعودية", url: "https://stream.radiojar.com/0tpy1u0kxtzuv" },
+        { name: "الشيخ الحصري - مصر", url: "https://stream.radiojar.com/8s5u5tpdtwzuv" },
+        { name: "مشاري العفاسي - الكويت", url: "https://stream.radiojar.com/3s5u5tpdtxyz" }
+      ],
+      azkar: [
+        { name: "أذكار الصباح", url: "https://stream.radiojar.com/azkar1" },
+        { name: "أذكار المساء", url: "https://stream.radiojar.com/azkar2" }
+      ],
+      riwayat: [
+        { name: "رواية حفص عن عاصم", url: "https://stream.radiojar.com/riwaya1" },
+        { name: "رواية ورش عن نافع", url: "https://stream.radiojar.com/riwaya2" }
+      ]
+    };
+
+    function populateStations(category) {
+      const select = document.getElementById("stationSelect");
+      select.innerHTML = "";
+      stations[category].forEach(st => {
+        const option = document.createElement("option");
+        option.value = st.url;
+        option.textContent = st.name;
+        select.appendChild(option);
+      });
+      changeStation();
+    }
+
+    function showCategory(category, btn) {
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      populateStations(category);
+    }
+
+    function changeStation() {
+      const audio = document.getElementById("audioPlayer");
+      const source = document.getElementById("audioSource");
+      const url = document.getElementById("stationSelect").value;
+      source.src = url;
+      audio.load();
+      audio.play();
+    }
+
+    function toggleMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    // Default
+    window.onload = () => {
+      populateStations('reciters');
+    }
+  </script>
+
+</body>
+</html>
